@@ -24,7 +24,7 @@ Node.js, Express, MongoDB, Mongoose, JSON Web Token (JWT), bcryptjs, Zod, dotenv
 
 ## Instalación y configuración
 
-1. Clonar el repositorio desde GitHub o descargar su código fuente.
+1. Clonar el [repositorio desde GitHub](https://github.com/AndradaAgustin/api-utn-films) o descargar su código fuente.
 2. Abrir una terminal en la carpeta `api-utn-films`.
 3. Instalar las dependencias:
 
@@ -44,7 +44,7 @@ En PowerShell se puede utilizar `Copy-Item .env.example .env`.
 
 ```dotenv
 PORT=1234
-URI_DB=mongodb://127.0.0.1:27017/films
+URI_DB=
 URI_LOCAL_DB=mongodb://127.0.0.1:27017/films
 JWT_SECRET=REEMPLAZAR_POR_UNA_CLAVE_SEGURA
 GMAIL_USER=
@@ -54,13 +54,21 @@ GMAIL_PASS=
 | Variable | Descripción |
 | --- | --- |
 | `PORT` | Puerto del servidor HTTP. |
-| `URI_DB` | URI de conexión a MongoDB utilizada por el servidor. Para Atlas, utilizar la URI del clúster propio. |
-| `URI_LOCAL_DB` | URI alternativa de referencia para MongoDB local. |
-| `JWT_SECRET` | Clave privada para firmar y verificar tokens. |
+| `URI_DB` | URI de MongoDB Atlas. Dejar vacía para utilizar MongoDB local. |
+| `URI_LOCAL_DB` | URI de MongoDB local, utilizada cuando `URI_DB` está vacía. |
+| `JWT_SECRET` | Clave secreta para firmar y verificar tokens. |
 | `GMAIL_USER` | Cuenta de correo para las alertas, si se configura esta función. |
 | `GMAIL_PASS` | Contraseña de aplicación de Gmail para las alertas. |
 
-El código original utiliza `URI_DB` directamente; por eso debe contener la URI elegida, incluso si MongoDB es local. Las credenciales de Gmail no son necesarias para probar el CRUD. Las alertas por correo requieren una configuración válida de Nodemailer.
+Para utilizar MongoDB local, dejar `URI_DB` vacía y completar `URI_LOCAL_DB` con la dirección de MongoDB local. MongoDB Community Server debe estar instalado y ejecutándose. Para utilizar MongoDB Atlas, completar `URI_DB` con la URI del clúster propio.
+
+Reemplazar `JWT_SECRET` por una clave propia. Se puede generar una clave segura con:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Las credenciales de Gmail son opcionales y no son necesarias para probar el CRUD. Las alertas por correo requieren una configuración válida de Nodemailer.
 
 No subir el archivo `.env` al repositorio. Utilizar únicamente valores ficticios en `.env.example`.
 
@@ -79,6 +87,21 @@ npm run dev
 ```
 
 La API estará disponible en `http://localhost:1234` si se utiliza el puerto del ejemplo. Para comprobar el servidor, realizar `GET /`. La terminal debe indicar que MongoDB se conectó correctamente.
+
+## Colección de Bruno
+
+La colección de peticiones HTTP facilita las pruebas de la API. Si se incluye en el repositorio, se encuentra en la carpeta `bruno/`.
+
+1. Abrir Bruno e importar o abrir la colección.
+2. Iniciar el servidor con `npm run dev`.
+3. Registrar un usuario de prueba.
+4. Iniciar sesión y copiar el JWT devuelto en `data.token`.
+5. En las peticiones de la carpeta Films, ingresar a **Auth**, seleccionar **Bearer Token** y pegar el JWT sin comillas ni el prefijo `Bearer`. También se puede configurar el token en la carpeta Films y seleccionar `Inherit` en sus peticiones.
+6. Probar las operaciones CRUD y los filtros de búsqueda.
+
+Utilizar `http://localhost:1234` como URL base. Para modificar o eliminar películas, reemplazar el identificador de ejemplo por el `_id` de una película existente. Verificar que las peticiones PATCH y DELETE incluyan dicho identificador en la URL y que todas las rutas de películas tengan autenticación.
+
+Si el token vence, iniciar sesión nuevamente. No publicar tokens ni credenciales reales en la colección.
 
 ## Endpoints
 
@@ -123,7 +146,7 @@ Utilizar `http://localhost:1234` como URL base y seleccionar JSON como tipo de c
 
 Copiar el token devuelto en `data.token`. Tiene una duración de una hora.
 
-En Bruno, seleccionar **Auth → Bearer Token** y pegar el token para todas las peticiones a `/films`. Equivale al encabezado:
+En Bruno, seleccionar **Auth → Bearer Token** y pegar el token para todas las peticiones a `/films`, sin escribir el prefijo `Bearer`. Equivale al encabezado:
 
 ```http
 Authorization: Bearer TU_TOKEN
@@ -213,6 +236,7 @@ api-utn-films/
 │   ├── utils/           # Funciones auxiliares
 │   ├── validators/      # Esquemas de validación Zod
 │   └── index.js         # Configuración e inicio del servidor
+├── bruno/              # Colección de pruebas (si se incluye)
 ├── .env.example
 ├── .gitignore
 ├── index.html

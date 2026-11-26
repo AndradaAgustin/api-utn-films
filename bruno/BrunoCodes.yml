@@ -1,0 +1,244 @@
+opencollection: 1.0.0
+info:
+  name: Backend
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+items:
+  - info:
+      name: Users
+      type: folder
+      seq: 2
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Login
+          type: http
+          seq: 3
+        http:
+          method: POST
+          url: http://localhost:1234/users/login
+          body:
+            type: json
+            data: |-
+              {
+                "email": "gabrielaaa@gmail.com",
+                "password": "pepe123"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Register
+          type: http
+          seq: 2
+        http:
+          method: POST
+          url: http://localhost:1234/users/register
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Gabrielaa",
+                "email": "gabrielaaa@gmail.com",
+                "password": "pepe123"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Users
+          type: http
+          seq: 1
+        http:
+          method: GET
+          url: http://localhost:1234/users
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+  - info:
+      name: Films
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Buscador
+          type: http
+          seq: 1
+        http:
+          method: GET
+          url: http://localhost:1234/films/search?yearFrom=2000
+          params:
+            - name: results
+              value: '1'
+              type: query
+              disabled: true
+            - name: offset
+              value: '2'
+              type: query
+              disabled: true
+            - name: title
+              value: El origen
+              type: query
+              disabled: true
+            - name: yearFrom
+              value: '2000'
+              type: query
+            - name: yearTo
+              value: '2020'
+              type: query
+              disabled: true
+            - name: genre
+              value: Terror
+              type: query
+              disabled: true
+            - name: year
+              value: '2014'
+              type: query
+              disabled: true
+          auth:
+            type: bearer
+            token: ''
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Crear Pelicula
+          type: http
+          seq: 1
+        http:
+          method: POST
+          url: http://localhost:1234/films
+          body:
+            type: json
+            data: |-
+              {
+                  "title": "The Godfather",
+                  "year": 1972,
+                  "genre": "Drama"
+              }
+          auth:
+            type: bearer
+            token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZWNkNzc5ZGU4YjJlMTAwYTRkZGQ0NyIsIm5hbWUiOiJHYWJyaWVsYSIsImVtYWlsIjoiZ2FicmllbGFAZ21haWwuY29tIiwiaWF0IjoxNzkzOTA2NTYzLCJleHAiOjE3OTM5MTAxNjN9.aLchKemnnhGVdJSguXnWLVUFG2XKThBKnYtpfZE1ps0
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Eliminar
+          type: http
+          seq: 2
+        http:
+          method: DELETE
+          url: http://localhost:1234/films/ID_DE_LA_PELICULA
+          auth:
+            type: bearer
+            token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc5Mzg1MTE2MywiZXhwIjoxNzkzODU0NzYzfQ.pKYalTK4KV5WNsvSxQ2zX2sAfsAUP7Fk1bfVJTPTW9w
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Modificar Peliculas
+          type: http
+          seq: 1
+        http:
+          method: PATCH
+          url: http://localhost:1234/films/ID_DE_LA_PELICULA
+          params:
+            - name: title
+              value: ''
+              type: query
+              disabled: true
+            - name: genre
+              value: ''
+              type: query
+              disabled: true
+            - name: year
+              value: ''
+              type: query
+              disabled: true
+            - name: results
+              value: ''
+              type: query
+              disabled: true
+            - name: offset
+              value: ''
+              type: query
+              disabled: true
+          body:
+            type: json
+            data: |-
+              {
+                  "genre": "Drama"
+              }
+          auth:
+            type: bearer
+            token: ''
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+      - info:
+          name: Obtener Peliculas
+          type: http
+          seq: 1
+        http:
+          method: GET
+          url: http://localhost:1234/films
+          headers:
+            - name: Authorization
+              value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc5Mzg0NzQxNSwiZXhwIjoxNzkzODUxMDE1fQ.rAlX6lcavvq8T5lYhDaXT8NtuJZmzoXz-I94Uz-Cqg4
+              disabled: true
+            - name: Authorization
+              value: ''
+              disabled: true
+          auth:
+            type: bearer
+            token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZiMDg4ZDYzZTllMjliNTlhM2ZjNDMxZCIsIm5hbWUiOiJHYWJyaWVsYWEiLCJlbWFpbCI6ImdhYnJpZWxhYWFAZ21haWwuY29tIiwiaWF0IjoxNzk1NzIyNzYzLCJleHAiOjE3OTU3MjYzNjN9.ZdE4qqcM0PikOwP5-D4J8bnQixEOQBNMKsIi8HUSVvw
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: false
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    exportedAt: '2026-11-26T20:00:08.729Z'
+    exportedUsing: Bruno
